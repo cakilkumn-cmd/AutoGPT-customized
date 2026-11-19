@@ -1,0 +1,273 @@
+{
+  "id": "e7643a69-bc4c-5a3d-9c64-269cbe1565f3",
+  "version": 1,
+  "is_active": true,
+  "name": "AutoCheck: Inserat prüfen und NoVA berechnen",
+  "description": "Fügt ein Autoinserat ein. Claude liest die Daten aus, danach berechnen zwei feste Regelblöcke NoVA, Endpreis in Österreich und Red Flags.",
+  "nodes": [
+    {
+      "id": "e616c375-f6a7-5525-a68e-611c57b98b76",
+      "block_id": "c0a8e994-ebf1-4a9c-a4d8-89d09c86741b",
+      "input_default": {
+        "name": "inserat",
+        "title": "Inseratstext",
+        "description": "Kompletten Text des Autoinserats hier einfügen (z. B. von mobile.de oder AutoScout24)."
+      },
+      "metadata": {
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "customized_name": "Inseratstext"
+      }
+    },
+    {
+      "id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "block_id": "ed55ac19-356e-4243-a6cb-bc599e9b716f",
+      "input_default": {
+        "model": "claude-sonnet-5-5",
+        "sys_prompt": "Du liest Gebrauchtwagen-Inserate aus und gibst die Daten exakt im verlangten JSON-Format zurück. Rate nie. Zahlen ohne Tausenderpunkte und ohne Einheit. Regeln für unbekannte Werte: neupreis_netto = 0, co2_wltp_g_km = null, beschreibung = \"\", ki_hinweise = []. preis_eur und erstzulassung stehen in jedem Inserat.",
+        "prompt": "Lies dieses Inserat aus:\n\n{{inserat | safe}}",
+        "expected_format": {
+          "preis_eur": "Angebotspreis in Euro als Zahl, z. B. 23800",
+          "erstzulassung": "Erstzulassung als JJJJ-MM, z. B. 2022-03",
+          "co2_wltp_g_km": "CO2 kombiniert (WLTP) in g/km als ganze Zahl; null wenn nicht angegeben",
+          "neupreis_netto": "Neupreis netto in Euro, falls im Inserat genannt, sonst 0",
+          "verkaeufer": "genau 'haendler' oder 'privat'",
+          "land": "Standort des Fahrzeugs: 'DE', 'AT' oder 'andere'",
+          "kraftstoff": "benzin, diesel, elektro, hybrid, plugin_hybrid, gas oder andere",
+          "beschreibung": "Beschreibungstext des Inserats möglichst wörtlich",
+          "ki_hinweise": "Liste von Objekten {schwere: info|warnung|kritisch, titel, zitat} mit Auffälligkeiten wie Zeitdruck, Widersprüche, Vorkasse, Export, Mängel; leere Liste wenn keine"
+        },
+        "list_result": false,
+        "retry": 3
+      },
+      "metadata": {
+        "position": {
+          "x": 500,
+          "y": 0
+        },
+        "customized_name": "Claude liest das Inserat aus"
+      }
+    },
+    {
+      "id": "346a37e0-1f33-5429-bbc0-0d7f6740660c",
+      "block_id": "02ba1843-3293-4590-bc3a-e19f59c94e8c",
+      "input_default": {},
+      "metadata": {
+        "position": {
+          "x": 1100,
+          "y": -250
+        },
+        "customized_name": "NoVA und Endpreis AT"
+      }
+    },
+    {
+      "id": "47b67f3f-7a36-50be-bbac-afbd655fa7b1",
+      "block_id": "7201a269-26ba-4405-92d9-22828d3ccacc",
+      "input_default": {},
+      "metadata": {
+        "position": {
+          "x": 1100,
+          "y": 300
+        },
+        "customized_name": "Red Flags"
+      }
+    },
+    {
+      "id": "fd9dcdc3-7a0e-5152-afd4-d2f010aa6cfb",
+      "block_id": "363ae599-353e-4804-937e-b2ee3cef3da4",
+      "input_default": {
+        "name": "nova",
+        "title": "NoVA (Euro)",
+        "description": "NoVA (Euro)"
+      },
+      "metadata": {
+        "position": {
+          "x": 1700,
+          "y": -450
+        },
+        "customized_name": "NoVA (Euro)"
+      }
+    },
+    {
+      "id": "2bea42d6-297f-5759-b1c4-7986c98ac860",
+      "block_id": "363ae599-353e-4804-937e-b2ee3cef3da4",
+      "input_default": {
+        "name": "endpreis_at",
+        "title": "Endpreis in Österreich (Euro)",
+        "description": "Endpreis in Österreich (Euro)"
+      },
+      "metadata": {
+        "position": {
+          "x": 1700,
+          "y": -250
+        },
+        "customized_name": "Endpreis in Österreich (Euro)"
+      }
+    },
+    {
+      "id": "aab8f59c-40d1-5a3d-a06e-d293ed06a2e5",
+      "block_id": "363ae599-353e-4804-937e-b2ee3cef3da4",
+      "input_default": {
+        "name": "hinweise",
+        "title": "Hinweise zur Rechnung",
+        "description": "Hinweise zur Rechnung"
+      },
+      "metadata": {
+        "position": {
+          "x": 1700,
+          "y": -50
+        },
+        "customized_name": "Hinweise zur Rechnung"
+      }
+    },
+    {
+      "id": "45a56e56-4821-58a2-a4dc-e40ba98ac399",
+      "block_id": "363ae599-353e-4804-937e-b2ee3cef3da4",
+      "input_default": {
+        "name": "red_flags",
+        "title": "Red Flags",
+        "description": "Red Flags"
+      },
+      "metadata": {
+        "position": {
+          "x": 1700,
+          "y": 300
+        },
+        "customized_name": "Red Flags"
+      }
+    }
+  ],
+  "links": [
+    {
+      "id": "e2cf2904-da38-5794-90ef-f7e6ed38ed40",
+      "source_id": "e616c375-f6a7-5525-a68e-611c57b98b76",
+      "sink_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "source_name": "result",
+      "sink_name": "prompt_values_#_inserat",
+      "is_static": false
+    },
+    {
+      "id": "2b1ed0db-b433-5fbc-a2dd-6a827b37c344",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "346a37e0-1f33-5429-bbc0-0d7f6740660c",
+      "source_name": "response_#_preis_eur",
+      "sink_name": "preis_eur",
+      "is_static": false
+    },
+    {
+      "id": "b0bec637-af63-5f30-962d-11a082e1fe18",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "346a37e0-1f33-5429-bbc0-0d7f6740660c",
+      "source_name": "response_#_erstzulassung",
+      "sink_name": "erstzulassung",
+      "is_static": false
+    },
+    {
+      "id": "ffd226a4-56e0-5e29-94ac-18928201cef2",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "346a37e0-1f33-5429-bbc0-0d7f6740660c",
+      "source_name": "response_#_co2_wltp_g_km",
+      "sink_name": "co2_wltp_g_km",
+      "is_static": false
+    },
+    {
+      "id": "a84a8845-643a-5747-8d57-88cb0c34d21e",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "346a37e0-1f33-5429-bbc0-0d7f6740660c",
+      "source_name": "response_#_neupreis_netto",
+      "sink_name": "neupreis_netto",
+      "is_static": false
+    },
+    {
+      "id": "422d19d3-ef7a-545b-9867-1d537e0c61b1",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "346a37e0-1f33-5429-bbc0-0d7f6740660c",
+      "source_name": "response_#_verkaeufer",
+      "sink_name": "verkaeufer",
+      "is_static": false
+    },
+    {
+      "id": "e2fb5bf6-83b7-5925-8355-daeaea5f1bd3",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "47b67f3f-7a36-50be-bbac-afbd655fa7b1",
+      "source_name": "response_#_preis_eur",
+      "sink_name": "preis_eur",
+      "is_static": false
+    },
+    {
+      "id": "32d2ff42-6658-59b2-97df-93ef96477ab7",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "47b67f3f-7a36-50be-bbac-afbd655fa7b1",
+      "source_name": "response_#_erstzulassung",
+      "sink_name": "erstzulassung",
+      "is_static": false
+    },
+    {
+      "id": "57e73bc1-7fcb-5e6f-af62-72392b0707b9",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "47b67f3f-7a36-50be-bbac-afbd655fa7b1",
+      "source_name": "response_#_land",
+      "sink_name": "land",
+      "is_static": false
+    },
+    {
+      "id": "2b7aa68d-fe2a-5271-8dd5-f28596132e87",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "47b67f3f-7a36-50be-bbac-afbd655fa7b1",
+      "source_name": "response_#_kraftstoff",
+      "sink_name": "kraftstoff",
+      "is_static": false
+    },
+    {
+      "id": "ca748d76-561e-5aa0-ab39-ca8930146884",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "47b67f3f-7a36-50be-bbac-afbd655fa7b1",
+      "source_name": "response_#_beschreibung",
+      "sink_name": "beschreibung",
+      "is_static": false
+    },
+    {
+      "id": "b2f19b7d-8b87-5bbe-875f-39f8bbfe08dd",
+      "source_id": "5036a7e2-9ec0-5f41-a68d-f88390e77b9b",
+      "sink_id": "47b67f3f-7a36-50be-bbac-afbd655fa7b1",
+      "source_name": "response_#_ki_hinweise",
+      "sink_name": "ki_hinweise",
+      "is_static": false
+    },
+    {
+      "id": "43d0a794-a158-5889-ba4b-7f7e6b210fd1",
+      "source_id": "346a37e0-1f33-5429-bbc0-0d7f6740660c",
+      "sink_id": "fd9dcdc3-7a0e-5152-afd4-d2f010aa6cfb",
+      "source_name": "nova",
+      "sink_name": "value",
+      "is_static": false
+    },
+    {
+      "id": "26be963c-af0e-5026-a013-71e5b2ab4097",
+      "source_id": "346a37e0-1f33-5429-bbc0-0d7f6740660c",
+      "sink_id": "2bea42d6-297f-5759-b1c4-7986c98ac860",
+      "source_name": "endpreis_at",
+      "sink_name": "value",
+      "is_static": false
+    },
+    {
+      "id": "04fc61dd-45fc-57b1-b779-998922821512",
+      "source_id": "346a37e0-1f33-5429-bbc0-0d7f6740660c",
+      "sink_id": "aab8f59c-40d1-5a3d-a06e-d293ed06a2e5",
+      "source_name": "hinweise",
+      "sink_name": "value",
+      "is_static": false
+    },
+    {
+      "id": "23313d35-f39d-5cd3-92ff-fed51b29080d",
+      "source_id": "47b67f3f-7a36-50be-bbac-afbd655fa7b1",
+      "sink_id": "45a56e56-4821-58a2-a4dc-e40ba98ac399",
+      "source_name": "flags",
+      "sink_name": "value",
+      "is_static": false
+    }
+  ],
+  "sub_graphs": []
+}
