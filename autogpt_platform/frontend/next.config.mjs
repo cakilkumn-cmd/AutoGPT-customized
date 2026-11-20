@@ -79,6 +79,9 @@ const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: "256mb",
+      // GitHub Codespaces port forwarding sends x-forwarded-host
+      // *.app.github.dev while the browser's origin stays localhost:3000.
+      allowedOrigins: ["localhost:3000"],
     },
     middlewareClientMaxBodySize: "256mb",
     // Limit parallel webpack workers to reduce peak memory during builds.
